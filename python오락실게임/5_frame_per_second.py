@@ -1,3 +1,5 @@
+#초당 프레임수 설정
+#프레임수가 높을수록 캐릭터 움직임이 부드러워짐 
 #키보드를 누르면 캐릭터가 이동하는 것을 만들어보자 
 
 import pygame
@@ -9,6 +11,9 @@ screen_height = 640
 screen=pygame.display.set_mode(screen_width,screen_height)
 
 pygame.display.set_caption("오락실 게임")
+
+#FPS
+clock = pygame.time.Clock()
 
 #배경 이미지 불러오기
 backgroundimg = pygame.image.load("C:/Users/trixy/OneDrive/바탕 화면/python오락실게임/backgroundimg.png")
@@ -38,8 +43,17 @@ character_y_pos = screen_height/2 - (character_height/2)
 to_x = 0
 to_y = 0
 
+#이동 속도 
+character_speed = 10
+
 running = True
 while running:
+    dt = clock.tick(30) #게임화면의 초당 프레임수
+    #이전에 비해서 느려진게 확인
+    #캐릭터가 100만큼 이동해야 함
+    #10 fps : 1초 동안에 10번 동작
+    #20 fps : 1초 동안에 20번 동작 
+    print("fps : "+str(clock.get_fps()))
     for event in pygame.event.get():
        if event.type == pygame.QUIT:
             running = False #게임이 진행중이 아니다.
@@ -47,17 +61,21 @@ while running:
         if event.type == pygame.KEYDOWN: #pygame의 keyboard를 누르는 이벤트가 발생하면
             if event.key == pygame.K_LEFT: #캐릭터를 왼쪽으로
                 #pass
-                to_x -=5 #to_x = to_x-5
+                #to_x -=5 #to_x = to_x-5
+                to_x -= character_speed
             elif event.key == pygame.K_RIGHT :
                 #pass
-                to_x +=5 #to_x = to_x+5
+                #to_x +=5 #to_x = to_x+5
+                to_x +=character_speed
             elif event.key == pygame.K_UP:
                 #pass
-                to_y -=5
+                #to_y -=5
                 #to_y = to_y-5
+                to_y -=character_speed
             elif event.key == pygame.K_DOWN:
                 #pass
-                to_y+=5
+                #to_y+=5
+                to_y+=character_speed
             
         if event.type == pygame.KEYUP: #방향키를 떼면 캐릭터는 먼춘다.
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -65,8 +83,11 @@ while running:
             if event.key ==pygame.K_UP or event.key == pygame.K_DOWN :
                 to_y =0
                 
-    character_x_pos +=to_x
-    character_y_pos += to_y
+    #character_x_pos +=to_x
+    #character_y_pos += to_y
+    #위치 선택해주기 
+    character_x_pos += to_x * dt
+    character_y_pos += to_y * dt
     
     #여기까지 문제가 다른 건 다 잘되는데 캐릭터 위치가 화면을 벗어나게 되면 그대로 벗어나게 됨. 아무리 방향키를 계속 눌러도 캐릭터는 화면 내에만 있어야 한다. 
     
